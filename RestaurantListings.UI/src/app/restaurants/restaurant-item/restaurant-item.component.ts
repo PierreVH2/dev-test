@@ -1,17 +1,29 @@
-import { Component, Input, OnInit } from '@angular/core';
-
+import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { Restaurant } from 'app/restaurants/restaurants.models';
+import { Observable } from 'rxjs';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-restaurant-item',
   templateUrl: './restaurant-item.component.html',
   styleUrls: ['./restaurant-item.component.scss'],
 })
-export class RestaurantItemComponent implements OnInit {
+export class RestaurantItemComponent {
   @Input()
   restaurant!: Restaurant;
 
-  constructor() {}
+  public get loggedIn$(): Observable<boolean> {
+    return this.userService.loggedIn$;
+  }
 
-  ngOnInit(): void {}
+  constructor(private router: Router, private userService: UserService) {}
+
+  rateRestaurant(): void {
+    this.router.navigate(['/restaurants/rate'], {
+      queryParams: {
+        restaurant: this.restaurant.id
+      }
+    });
+  }
 }

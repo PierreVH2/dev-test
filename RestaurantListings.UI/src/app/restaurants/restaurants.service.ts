@@ -16,4 +16,11 @@ export class RestaurantsService {
   getRestaurants(): Observable<Restaurant[]> {
     return this.http.get<Restaurant[]>('/api/restaurants');
   }
+
+  addRating(restaurantId: number, inputUserEmail: string, inputRating: number): Observable<Restaurant> {
+    return this.http.post<Restaurant>(`/api/restaurants/rate/${restaurantId}`, {
+      userEmail: inputUserEmail,
+      rating: inputRating
+    });
+  }
 }

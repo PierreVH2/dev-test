@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { map, switchMap } from 'rxjs/operators';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 import { Restaurant } from 'app/restaurants/restaurants.models';
 import { RestaurantsService } from 'app/restaurants/restaurants.service';
+import { RestaurantFilter } from './restaurant-filters/restaurant-filters.component';
 
 @Component({
   selector: 'app-restaurants',
@@ -11,58 +11,48 @@ import { RestaurantsService } from 'app/restaurants/restaurants.service';
   styleUrls: ['./restaurants.component.scss'],
 })
 export class RestaurantsComponent implements OnInit {
-  restaurants: Restaurant[] | null = null;
+  private availableTags: string[] = [];
+  private restaurantsList: Restaurant[] = [];
+  private filter$ = new BehaviorSubject<RestaurantFilter>({
+    search: '',
+    tagList: [],
+    familyFriendly: false,
+    vegan: false
+  } as RestaurantFilter);
 
-  tags!: Observable<string[]>;
+  public get tags(): string[] {
+    return this.availableTags;
+  }
 
-  filters = new BehaviorSubject<any>({});
+  public get restaurants(): Restaurant[] {
+    return this.restaurantsList.filter(restaurant => this.restaurantMatchesFilter(restaurant, this.filter$.getValue()));
+  }
 
   constructor(private restaurantsService: RestaurantsService) {}
 
   ngOnInit(): void {
-    this.filters
-      .pipe(
-        switchMap((filters) =>
-          this.restaurantsService
-            .getRestaurants()
-            .pipe(
-              map((restaurants) => this.filterRestaurants(restaurants, filters))
-            )
-        )
-      )
-      .subscribe((restaurants) => (this.restaurants = restaurants));
+    this.restaurantsService.getRestaurants().subscribe(restaurants => {
+      this.restaurantsList = restaurants;
 
-    this.tags = this.restaurantsService
-      .getRestaurants()
-      .pipe(map((restaurants) => restaurants.flatMap((x) => x.tags)));
-  }
-
-  onFiltersChange(filters: any): void {
-    this.filters.next(filters);
-  }
-
-  private filterRestaurants(
-    restaurants: Restaurant[],
-    filters: any
-  ): Restaurant[] {
-    if (filters.search) {
-      restaurants = restaurants.filter(
-        (x) => x.name.search(filters.search) > -1
-      );
-    }
-
-    filters.tags?.forEach((tag: string) => {
-      restaurants = restaurants.filter((x) => x.tags.includes(tag));
+      const tagsSet = restaurants.reduce((accumTags, nextRestaurant) => {
+        nextRestaurant.tags.forEach(tag => accumTags.add(tag));
+        return accumTags;
+      }, new Set<string>());
+      this.availableTags = [...tagsSet.values()].sort((a, b) => a < b ? -1 : a > b ? 1 : 0);
     });
+  }
 
-    if (filters.vegan) {
-      restaurants = restaurants.filter((x) => !x.veganFriendly);
-    }
+  onFiltersChange(filters: RestaurantFilter): void {
+    console.log(filters);
+    this.filter$.next(filters);
+  }
 
-    if (filters.familyFreindly) {
-      restaurants = restaurants.filter((x) => x.familyFriendly);
-    }
-
-    return restaurants;
+  private restaurantMatchesFilter(restaurant: Restaurant, filter: RestaurantFilter): boolean {
+    const nameMatches = !filter.search || restaurant.name.toUpperCase().indexOf(filter.search.toUpperCase()) >= 0;
+    const tagMatches = filter.tagList.length <= 0 || filter.tagList.reduce((allTagsMatched, nextTag) => {
+      return allTagsMatched && (restaurant.tags.indexOf(nextTag) >= 0);
+    }, true as boolean);
+    const otherMatches = (!filter.vegan || restaurant.veganFriendly) && (!filter.familyFriendly || restaurant.familyFriendly);
+    return nameMatches && tagMatches && otherMatches;
   }
 }

@@ -9,7 +9,7 @@ using RestaurantListings.Data;
 namespace RestaurantListings.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200925061232_CreateSchema")]
+    [Migration("20201017141458_CreateSchema")]
     partial class CreateSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -333,6 +333,11 @@ namespace RestaurantListings.Data.Migrations
                     b.Property<string>("Tags")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UsersRated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValue("[]");
+
                     b.Property<bool>("VeganFriendly")
                         .HasColumnType("INTEGER");
 
@@ -352,6 +357,7 @@ namespace RestaurantListings.Data.Migrations
                             PhotoUri = "/images/yokohama.jpg",
                             Rating = 5.0m,
                             Tags = "[\"Japanese\",\"Asian\",\"Healthy\"]",
+                            UsersRated = "[]",
                             VeganFriendly = true
                         },
                         new
@@ -365,6 +371,7 @@ namespace RestaurantListings.Data.Migrations
                             PhotoUri = "/images/falafel.jpg",
                             Rating = 4.5m,
                             Tags = "[\"Fast food\",\"Healthy\",\"British\"]",
+                            UsersRated = "[]",
                             VeganFriendly = true
                         },
                         new
@@ -378,6 +385,7 @@ namespace RestaurantListings.Data.Migrations
                             PhotoUri = "/images/bengal.jpg",
                             Rating = 4.0m,
                             Tags = "[\"Indian\",\"Asian\",\"Bar\"]",
+                            UsersRated = "[]",
                             VeganFriendly = true
                         },
                         new
@@ -391,6 +399,7 @@ namespace RestaurantListings.Data.Migrations
                             PhotoUri = "/images/gaucho.jpg",
                             Rating = 3.0m,
                             Tags = "[\"Steakhouse\",\"Argentinian\",\"Bar\"]",
+                            UsersRated = "[]",
                             VeganFriendly = false
                         },
                         new
@@ -404,6 +413,7 @@ namespace RestaurantListings.Data.Migrations
                             PhotoUri = "/images/viva.jpg",
                             Rating = 4.2m,
                             Tags = "[\"Latin\",\"Spanish\",\"Cuban\"]",
+                            UsersRated = "[]",
                             VeganFriendly = true
                         },
                         new
@@ -417,6 +427,7 @@ namespace RestaurantListings.Data.Migrations
                             PhotoUri = "/images/brunswick.jpg",
                             Rating = 3.7m,
                             Tags = "[\"Bar\",\"British\",\"Pub\"]",
+                            UsersRated = "[]",
                             VeganFriendly = true
                         });
                 });

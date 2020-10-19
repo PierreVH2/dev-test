@@ -6,9 +6,9 @@
   <div class="filter-group">
     <div class="label">Tags</div>
 
-    <div class="filter-item" *ngFor="let tag of tags; let i = index">
-      <input type="checkbox" [value]="tag" (change)="onTagChecked(tag)" />
-      {{ tag }}
+    <div class="filter-item" *ngFor="let tag of tagNames">
+      <input type="checkbox" (change)="onTagCheckToggle(tag)" />
+      <span>{{tag}}</span>
     </div>
   </div>
 

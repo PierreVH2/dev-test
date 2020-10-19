@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace RestaurantListings.Data.Entities
 {
@@ -23,5 +24,8 @@ namespace RestaurantListings.Data.Entities
         public bool VeganFriendly { get; set; }
 
         public List<string> Tags { get; set; }
+
+        [JsonIgnore]
+        public List<string> UsersRated { get; set; }
     }
 }

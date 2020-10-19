@@ -14,6 +14,13 @@ const routes: Routes = [
         (m) => m.RestaurantsModule
       ),
   },
+  {
+    path: 'restaurants/**',
+    loadChildren: () =>
+      import('app/restaurants/restaurants.module').then(
+        (m) => m.RestaurantsModule
+      ),
+  }
 ];
 
 @NgModule({

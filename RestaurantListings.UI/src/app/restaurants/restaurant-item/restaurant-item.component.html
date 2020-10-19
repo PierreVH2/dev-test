@@ -1,23 +1,29 @@
-<div class="photo">
-  <img [src]="restaurant.photoUri" class="photo-img" />
-</div>
-
 <div class="header">
   <h3 class="name">
     {{ restaurant.name }}
   </h3>
 </div>
 
-<div class="address">
-  {{ restaurant.address }}
-</div>
+<div class="content">
+  <div class="photo" [style.background-image]="'url(' + restaurant.photoUri + ')'"></div>
 
-<div class="description">
-  {{ restaurant.description }}
-</div>
+  <div class="content-text">
+    <div>
+      Rating: {{ restaurant.rating.toFixed(2) }} <button *ngIf="loggedIn$ | async" (click)="rateRestaurant()">Rate</button>
+    </div>
 
-<div class="contact-info">
-  <span class="phone-number">
-    {{ restaurant.phoneNumber }}
-  </span>
+    <div class="address">
+      {{ restaurant.address }}
+    </div>
+    
+    <div class="description">
+      {{ restaurant.description }}
+    </div>
+    
+    <div class="contact-info">
+      <span class="phone-number">
+        {{ restaurant.phoneNumber }}
+      </span>
+    </div>  
+  </div>
 </div>

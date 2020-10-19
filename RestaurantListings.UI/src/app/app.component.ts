@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { OAuthService } from 'angular-oauth2-oidc';
 
-import { authCodeFlowConfig } from './auth.config';
+import { UserService } from './restaurants/user.service';
 
 @Component({
   selector: 'app-root',
@@ -9,20 +8,19 @@ import { authCodeFlowConfig } from './auth.config';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  constructor(private oauthService: OAuthService) {
-    this.oauthService.configure(authCodeFlowConfig);
-    this.oauthService.loadDiscoveryDocumentAndTryLogin();
+  constructor(private userService: UserService) {
+    this.userService.initialise();
   }
 
   get authenticated(): boolean {
-    return this.oauthService.hasValidAccessToken();
+    return this.userService.isLoggedIn;
   }
 
   onSignIn(): void {
-    this.oauthService.initCodeFlow();
+    this.userService.signIn();
   }
 
   onSignOut(): void {
-    this.oauthService.logOut();
+    this.userService.signOut();
   }
 }

@@ -1,5 +1,5 @@
 :host {
-  display: block;
+  display: inline;
 }
 
 .header {
@@ -15,24 +15,21 @@
   font-size: 0.8rem;
 }
 
-.contact-info {
+.content {
   display: flex;
-  flex-wrap: wrap;
 }
 
 .photo {
+  background-repeat: no-repeat;
+  background-size: contain;
   width: 100px;
-  height: 100px;
-  float: left;
 }
 
-.photo-img {
-  max-width: 100%;
-  height: auto;
+.content-text {
+  flex: 1;
+  margin-left: 5px;
 }
 
-.photo-placeholder {
-  background-color: #f0f0f0;
-  height: 100%;
-  width: 100%;
+.content-text > div{
+  margin-bottom: 5px;
 }
